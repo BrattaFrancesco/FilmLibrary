@@ -1,0 +1,19 @@
+{
+  "name": "filmlibrary",
+  "version": "1.0.0",
+  "description": "WebApplication exam laboratory project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Francesco Bratta",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrattaFrancesco/FilmLibrary.git"
+  },
+  "bugs": {
+    "url": "https://github.com/BrattaFrancesco/FilmLibrary/issues"
+  },
+  "homepage": "https://github.com/BrattaFrancesco/FilmLibrary#readme"
+}
