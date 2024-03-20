@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/BrattaFrancesco/FilmLibrary/issues"
   },
-  "homepage": "https://github.com/BrattaFrancesco/FilmLibrary#readme"
+  "homepage": "https://github.com/BrattaFrancesco/FilmLibrary#readme",
+  "dependencies": {
+    "dayjs": "^1.11.10"
+  }
 }
