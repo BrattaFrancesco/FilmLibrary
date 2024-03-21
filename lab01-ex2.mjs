@@ -1,11 +1,11 @@
 'use strict'
 import dayjs from "dayjs";
 
-function Film(id, title, isFavourite = false, watchedDate = 0, rating = 0, userId = 1){
+function Film(id, title, isFavourite = false, watchedDate = null, rating = 0, userId = 1){
     this.id = id;
     this.title = title;
     this.isFavourite = isFavourite;
-    this.watchedDate = dayjs(watchedDate);
+    this.watchedDate = watchedDate && dayjs(watchedDate);
     this.rating = rating;
     this.userId = userId;
 
@@ -32,10 +32,10 @@ function FilmLibrary(){
     this.sortByDate = () => {
         let arrayToSort = [...this.filmList];
         arrayToSort.sort((f1, f2) =>{
-            if(Number.isNaN(f1.watchedDate.valueOf())) return 1;
-            if(Number.isNaN(f2.watchedDate.valueOf())) return -1;
-            //return f1.watchedDate.diff(f2.watchedDate);
-            return f1.watchedDate.isAfter(f2.watchedDate) ? 1 : -1;
+            if(!(f1.watchedDate)) return 1;
+            if(!(f2.watchedDate)) return -1;
+            return f1.watchedDate.diff(f2.watchedDate);
+            //return f1.watchedDate.isAfter(f2.watchedDate) ? 1 : -1;
         });
         return arrayToSort;
     }
@@ -75,19 +75,18 @@ for(const film of sortedFilms){
     console.log(film.toString());
 }
 
-/*
 //not working, maybe async problems?
 console.log("**Delete film 3**");
 filmLibrary.deleteFilm(3);
 for(const film of filmLibrary.filmList){
-    film.toString();
-}*/
+    console.log(film.toString());
+}
 
-/*console.log("**Reset wathced dates**");
+console.log("**Reset wathced dates**");
 filmLibrary.resetWatchedFilms();
 for(const film of filmLibrary.filmList){
     console.log(film.toString());
-}*/
+}
 
 console.log("**Rating filtered**")
 let rated = filmLibrary.getRated();
