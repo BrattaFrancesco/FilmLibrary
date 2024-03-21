@@ -178,6 +178,72 @@ function FilmLibrary(){
         });
     })
   }
+
+  /*
+  a. Store a new movie into the database. After completion, print a confirmation/failure message. 
+  */
+  this.addFilm = (film) => {
+    return new Promise((resolve, reject) => {
+      let sql = 'SELECT * FROM films WHERE title = ?';
+      db.get(sql, [film.title], (err, row) => {
+        if (err) {
+          reject(err);
+        } else if (row === undefined) {
+          sql = 'INSERT INTO films(title, isFavorite, rating, watchDate, userID) VALUES(?,?,?,DATE(?),?)';
+          db.run(sql, [film.title, film.isFavorite, film.rating, film.watchedDate.format("YYYY-MM-DD"), film.userId], (err) => {
+            if (err){
+              reject(err);
+            }else{
+              resolve("Film inserted.");
+            }
+          });
+        } else{
+          resolve("Film not insertable, check the used title.");
+        }
+      });
+    });
+  }
+  /*
+  b. Delete a movie from the database (using its ID as a reference). 
+     After completion, print a confirmation/failure message. 
+  */
+this.deleteFilm = (film) => {
+    return new Promise((resolve, reject) => {
+      let sql = 'SELECT * FROM films WHERE title = ?';
+      db.get(sql, [film.title], (err, row) => {
+        if (err) {
+          reject(err);
+        } else if (row !== undefined) {
+          sql = 'DELETE FROM films WHERE title = ?';
+          db.run(sql, [film.title], (err) => {
+            if (err){
+              reject(err);
+            }else{
+              resolve("Film deleted.");
+            }
+          });
+        } else{
+          resolve("Film not present, check the used title.");
+        }
+      });
+    });
+  }
+  /*
+  c. Delete the watch date of all films stored in the database. 
+     After completion, print a confirmation/failure message. 
+  */
+ this.deleteWathcedDates = () => {
+    return new Promise((resolve, reject) => {
+      let sql = 'UPDATE films SET watchDate = null';
+      db.run(sql, (err) => {
+        if (err){
+            reject(err);
+        }else{
+            resolve("Watched dates deleted.");
+        }
+      });
+    });
+  }
 }
 
 async function main(){
@@ -188,13 +254,16 @@ async function main(){
     //const filmList = await filmLib.getFilmsWatchedToday();
     //const filmList = await filmLib.getFilmsPreviousWatched(dayjs());
     //const filmList = await filmLib.getFilmsWithHigherRateThan(4);
-    const filmList = await filmLib.getFilmsTitleContains("pulp");
-    if(typeof filmList === 'string')
+    //const filmList = await filmLib.getFilmsTitleContains("pulp");
+    /*if(typeof filmList === 'string')
         console.log(filmList);
 
     for(let film of filmList){
         console.log(film.toString());
-    }
+    }*/
+    const newFilm = new Film(8, "Dune: Part 1", 1, "2024-03-21", 5, 1);
+    console.log(await filmLib.addFilm(newFilm));
+    console.log(await filmLib.deleteWathcedDates());
 }
 
 main();
