@@ -1,0 +1,66 @@
+GET http://localhost:3001/api/films
+
+###
+
+GET http://localhost:3001/api/films/favorite
+
+###
+
+GET http://localhost:3001/api/films/best
+
+###
+
+GET http://localhost:3001/api/films/last-month
+
+###
+
+GET http://localhost:3001/api/films/unseen
+
+###
+
+GET http://localhost:3001/api/films/1
+
+###
+
+POST http://localhost:3001/api/films
+content-type: application/json
+
+{
+  "title": "Titanic",
+  "isFavourte": 0,
+  "watchedDate": null,
+  "rating": 3,
+  "userId": 1
+}
+
+###
+
+PUT http://localhost:3001/api/films/4
+
+{
+  "title": "Matrix",
+  "isFavourte": 0,
+  "watchedDate": "2024-04-04",
+  "rating": 3,
+  "userId": 1
+}
+
+###
+
+PUT http://localhost:3001/api/films/4/rating
+
+{
+    "rating": 5
+}
+
+###
+
+PUT http://localhost:3001/api/films/4/favorite
+
+{
+    "favorite": 1
+}
+
+###
+
+DELETE http://localhost:3001/api/films/4
