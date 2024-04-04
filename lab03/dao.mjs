@@ -186,7 +186,7 @@ export function FilmLibrary(){
           reject(err);
         } else if (row === undefined) {
           sql = 'INSERT INTO films(title, isFavorite, rating, watchDate, userID) VALUES(?,?,?,DATE(?),?)';
-          db.run(sql, [film.title, film.isFavorite, film.rating, film.watchedDate.format("YYYY-MM-DD"), film.userId], (err) => {
+          db.run(sql, [film.title, film.isFavorite, film.rating, film.watchDate === undefined ? null : film.watchedDate.format("YYYY-MM-DD"), film.userId], (err) => {
             if (err){
               reject(err);
             }else{
@@ -199,6 +199,40 @@ export function FilmLibrary(){
       });
     });
   }
+
+  /*
+  a. Store a new movie into the database. After completion, print a confirmation/failure message. 
+  */
+  this.updateFilm = (film) => {
+    return new Promise((resolve, reject) => {
+      let sql = 'SELECT * FROM films WHERE id = ?';
+      db.get(sql, [film.id], (err, row) => {
+        if (err) {
+          reject(err);
+        } else if (row !== undefined) {
+          sql = 'UPDATE films SET title = ?, isFavorite = ?, watchDate = DATE(?), rating = ? WHERE id = ?';
+          if(film.title === undefined)
+            film.title = row.title;
+          if(film.watchDate === undefined)
+            film.watchDate = row.watchDate;
+          if(film.isFavorite === undefined)
+            film.isFavorite = row.isFavorite;
+          if(film.rating === undefined)
+            film.rating = row.rating;
+          db.run(sql, [film.title, film.isFavorite, film.watchDate, film.rating, film.id], (err) => {
+            if (err){
+              reject(err);
+            }else{
+              resolve("Film updated.");
+            }
+          });
+        } else{
+          resolve("Film not updatable, check the used id.");
+        }
+      });
+    });
+  }
+
   /*
   b. Delete a movie from the database (using its ID as a reference). 
      After completion, print a confirmation/failure message. 

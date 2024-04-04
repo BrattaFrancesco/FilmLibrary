@@ -17,7 +17,7 @@ GET http://localhost:3001/api/films/unseen
 
 ###
 
-GET http://localhost:3001/api/films/1
+GET http://localhost:3001/api/films/4
 
 ###
 
@@ -26,8 +26,8 @@ content-type: application/json
 
 {
   "title": "Titanic",
-  "isFavourte": 0,
-  "watchedDate": null,
+  "isFavorite": false,
+  "watchDate": null,
   "rating": 3,
   "userId": 1
 }
@@ -35,13 +35,11 @@ content-type: application/json
 ###
 
 PUT http://localhost:3001/api/films/4
+content-Type: application/json 
 
 {
   "title": "Matrix",
-  "isFavourte": 0,
-  "watchedDate": "2024-04-04",
-  "rating": 3,
-  "userId": 1
+  "watchDate": null
 }
 
 ###

@@ -1,6 +1,7 @@
 'use strict'
 import express, { response } from 'express';
 import morgan from 'morgan';
+import {check, validationResult} from 'express-validator';
 import { FilmLibrary } from './dao.mjs';
 
 // init
@@ -92,5 +93,73 @@ app.get('/api/films/:id', async(req, res) => {
     }
 });
 
+// POST /api/films
+app.post('/api/films', [
+    check('title').notEmpty(),
+    check('isFavorite').isBoolean(),
+    check('watchedDate').isDate({format: "YYYY-MM-DD", strictMode: true}).optional({nullable: true}),
+    check('rating').isNumeric(),
+    check('userId').isNumeric()
+], async (req, res) =>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors: errors.array()});
+    }
+
+    const filmToAdd = req.body;
+    const filmLibrary = new FilmLibrary();
+
+    try {
+        await filmLibrary.addFilm(filmToAdd);
+        res.status(201).end();
+    } catch {
+        res.status(500).json("Film not created");
+    }
+});
+
+// PUT /api/films/4
+app.put('/api/films/:id', [
+    check('title').isString().optional({nullable: true}),
+    check('watchedDate').isDate({format: "YYYY-MM-DD", strictMode: true}).optional({nullable: true}),
+], async (req, res) =>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors: errors.array()});
+    }
+
+    const filmToUpdate = req.body;
+    filmToUpdate.id = req.params.id;
+    console.log(filmToUpdate)
+    const filmLibrary = new FilmLibrary();
+
+    try {
+        await filmLibrary.updateFilm(filmToUpdate);
+        res.status(200).end();
+    } catch {
+        res.status(500).json("Film not pdated");
+    }
+});
+
+// PUT /api/films/4
+app.put('/api/films/:id/rating', [
+    check('rating').isEmpty()
+], async (req, res) =>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(422).json({errors: errors.array()});
+    }
+
+    const filmToUpdate = req.body;
+    filmToUpdate.id = req.params.id;
+    console.log(filmToUpdate)
+    const filmLibrary = new FilmLibrary();
+
+    try {
+        await filmLibrary.updateFilm(filmToUpdate);
+        res.status(200).end();
+    } catch {
+        res.status(500).json("Film not updated");
+    }
+});
 // start server
 app.listen(port, () => { console.log(`API server started at http://localhost:${port}`); });
