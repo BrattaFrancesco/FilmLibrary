@@ -7,49 +7,6 @@ const db = new sqlite.Database("data/films.sqlite", (err) => {
 });
 
 export function FilmLibrary(){
-    this.filmList = [];
-
-    this.addNewFil = (film) => {
-        this.filmList.push(film);
-    };
-
-    /*function(o1,o2){
-        if (sort_o1_before_o2)    return -1;
-        else if(sort_o1_after_o2) return  1;
-        else                      return  0;
-     */
-    this.sortByDate = () => {
-        let arrayToSort = [...this.filmList];
-        arrayToSort.sort((f1, f2) =>{
-            //check if falsy
-            if(!(f1.watchedDate)) return 1;
-            if(!(f2.watchedDate)) return -1;
-            return f1.watchedDate.diff(f2.watchedDate);
-            //return f1.watchedDate.isAfter(f2.watchedDate) ? 1 : -1;
-        });
-        return arrayToSort;
-    }
-
-    this.deleteFilm = (id) => {
-        this.filmList = this.filmList.filter((film, index, arr) => {
-            return film.id !== id;
-        });
-    }
-
-    this.resetWatchedFilms = () => {
-        this.filmList.forEach((film) => {delete film.watchedDate});
-    }
-
-    this.getRated = () => {
-        let filtered = this.filmList.filter((film, index, arr) => {
-            return film.rating > 0;
-        });
-
-        return filtered.sort((f1, f2) =>{
-            return f1.rating > f2.rating;
-        });
-    } 
-
     /*
     a. Retrieve all the stored films and return a Promise that resolves to an array of Film objects. 
    */

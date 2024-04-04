@@ -247,21 +247,21 @@ this.deleteFilm = (film) => {
 async function main(){
     const filmLib = new FilmLibrary();
 
-    //const filmList = await filmLib.getFilms();
+    const filmList = await filmLib.getFilms();
     //const filmList = await filmLib.getFavoriteFilms();
     //const filmList = await filmLib.getFilmsWatchedToday();
     //const filmList = await filmLib.getFilmsPreviousWatched(dayjs());
     //const filmList = await filmLib.getFilmsWithHigherRateThan(4);
     //const filmList = await filmLib.getFilmsTitleContains("pulp");
-    /*if(typeof filmList === 'string')
+    if(typeof filmList === 'string')
         console.log(filmList);
 
     for(let film of filmList){
         console.log(film.toString());
-    }*/
-    const newFilm = new Film(8, "Dune: Part 1", 1, "2024-03-21", 5, 1);
-    console.log(await filmLib.addFilm(newFilm));
-    console.log(await filmLib.deleteWathcedDates());
+    }
+    //const newFilm = new Film(8, "Dune: Part 1", 1, "2024-03-21", 5, 1);
+    //console.log(await filmLib.addFilm(newFilm));
+    //console.log(await filmLib.deleteWathcedDates());
 }
 
 main();
