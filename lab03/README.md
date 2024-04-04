@@ -61,7 +61,7 @@ URL: `/api/films/best`
 
 HTTP Method: GET.
 
-Description: Retrieve all best films.
+Description: Retrieve all best films (rated 5 out of 5)).
 
 Response: `200 OK` (success) or `500 Internal Server Error` (generic error).
 f.id, f.title, f.isFavorite, f.watchDate, f.rating, f.userId
@@ -89,7 +89,7 @@ HTTP Method: GET.
 Description: Retrieve all films seen in the last month.
 
 Response: `200 OK` (success) or `500 Internal Server Error` (generic error).
-f.id, f.title, f.isFavorite, f.watchDate, f.rating, f.userId
+
 Response body:
 ```
 [
@@ -114,7 +114,7 @@ HTTP Method: GET.
 Description: Retrieve all unseen films.
 
 Response: `200 OK` (success) or `500 Internal Server Error` (generic error).
-f.id, f.title, f.isFavorite, f.watchDate, f.rating, f.userId
+
 Response body:
 ```
 [

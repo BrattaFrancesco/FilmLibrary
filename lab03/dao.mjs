@@ -1,6 +1,7 @@
 'use strict'
 import sqlite from "sqlite3";
 import { Film } from "./Film.mjs";
+import dayjs from "dayjs";
 
 const db = new sqlite.Database("data/films.sqlite", (err) => {
     if(err) throw err;
@@ -61,6 +62,24 @@ export function FilmLibrary(){
     })
   }
 
+  /*
+    c. Retrieve all films watched last month and return a Promise that resolves to an array of Film objects. 
+   */
+    this.getFilmsWatchedLastMonth = () => {
+      return new Promise((resolve, reject) => {
+          const sql = "SELECT * FROM films WHERE watchDate >= ?";
+          db.all(sql, [dayjs().startOf('month').format("YYYY-MM-DD")], (err, rows) => {
+              if(err){
+                  reject(err);
+              }else if(rows !== undefined){
+                  resolve(rows.map((f) => new Film(f.id, f.title, f.isFavorite, f.watchDate, f.rating, f.userId)));
+              }else{
+                  resolve("No films watched in the last month");
+              }
+          });
+      })
+    }
+
    /* 
     d. Retrieve films whose watch date is earlier than a given date (received as a parameter). 
        Return a Promise that resolves to an array of Film objects. 
@@ -79,6 +98,25 @@ export function FilmLibrary(){
         });
     })
   }
+
+  /* 
+    d. Retrieve films never watched
+       Return a Promise that resolves to an array of Film objects. 
+   */
+       this.getUnseenFilms = (date) => {
+        return new Promise((resolve, reject) => {
+            const sql = "SELECT * FROM films WHERE watchDate IS NULL";
+            db.all(sql, (err, rows) => {
+                if(err){
+                    reject(err);
+                }else if(rows !== undefined){
+                    resolve(rows.map((f) => new Film(f.id, f.title, f.isFavorite, f.watchDate, f.rating, f.userId)));
+                }else{
+                    resolve("No films not watched");
+                }
+            });
+        })
+      }
 
    /* 
     e. Retrieve films whose rating is greater than or equal to a given number (received as a parameter).
@@ -117,6 +155,25 @@ export function FilmLibrary(){
         });
     })
   }
+
+  /* 
+    f. Retrieve films by id. 
+       Return a Promise that resolves to an array of Film objects. 
+   */
+       this.getFilmById = (id) => {
+        return new Promise((resolve, reject) => {
+            const sql = "SELECT * FROM films WHERE id = ?";
+            db.all(sql, [id], (err, rows) => {
+                if(err){
+                    reject(err);
+                }else if(rows !== undefined){
+                    resolve(rows.map((f) => new Film(f.id, f.title, f.isFavorite, f.watchDate, f.rating, f.userId)));
+                }else{
+                    resolve("No corresponding films");
+                }
+            });
+        })
+      }
 
   /*
   a. Store a new movie into the database. After completion, print a confirmation/failure message. 

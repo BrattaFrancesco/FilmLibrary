@@ -9,7 +9,6 @@ GET http://localhost:3001/api/films/favorite
 GET http://localhost:3001/api/films/best
 
 ###
-
 GET http://localhost:3001/api/films/last-month
 
 ###
