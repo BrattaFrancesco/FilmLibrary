@@ -1,7 +1,5 @@
 'use strict'
-import { rejects } from "assert";
 import dayjs from "dayjs";
-import { resolve } from "path";
 import sqlite from "sqlite3";
 
 const db = new sqlite.Database("data/films.sqlite", (err) => {
