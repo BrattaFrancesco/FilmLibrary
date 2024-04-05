@@ -25,7 +25,7 @@ POST http://localhost:3001/api/films
 content-type: application/json
 
 {
-  "title": "Titanic",
+  "title": "Dune part 1",
   "isFavorite": false,
   "watchDate": null,
   "rating": 3,
@@ -45,6 +45,7 @@ content-Type: application/json
 ###
 
 PUT http://localhost:3001/api/films/4/rating
+content-Type: application/json
 
 {
     "rating": 5
@@ -53,11 +54,12 @@ PUT http://localhost:3001/api/films/4/rating
 ###
 
 PUT http://localhost:3001/api/films/4/favorite
+content-Type: application/json
 
 {
-    "favorite": 1
+    "isFavorite": true
 }
 
 ###
 
-DELETE http://localhost:3001/api/films/4
+DELETE http://localhost:3001/api/films/7

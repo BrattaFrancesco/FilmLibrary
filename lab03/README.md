@@ -167,7 +167,7 @@ Request body:
 ```
 {
   "title": "Titanic",
-  "isFavourte": 0,
+  "isFavourte": False,
   "watchedDate": null,
   "rating": 3,
   "userId": 1
@@ -190,7 +190,7 @@ Request body:
 ```
 {
   "title": "Titanic",
-  "isFavourte": 0,
+  "isFavourte": false,
   "watchedDate": "",
   "rating": 3,
   "userId": 1
@@ -231,7 +231,7 @@ Description: Mark film as favorite/unfavorite.
 Request body:
 ```
 {
-  "isFavorite": 1,
+  "isFavorite": true,
 }
 ```
 

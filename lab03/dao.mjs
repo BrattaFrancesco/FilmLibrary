@@ -186,7 +186,7 @@ export function FilmLibrary(){
           reject(err);
         } else if (row === undefined) {
           sql = 'INSERT INTO films(title, isFavorite, rating, watchDate, userID) VALUES(?,?,?,DATE(?),?)';
-          db.run(sql, [film.title, film.isFavorite, film.rating, film.watchDate === undefined ? null : film.watchedDate.format("YYYY-MM-DD"), film.userId], (err) => {
+          db.run(sql, [film.title, film.isFavorite, film.rating, film.watchDate === null ? null : film.watchedDate.format("YYYY-MM-DD"), film.userId], (err) => {
             if (err){
               reject(err);
             }else{
@@ -211,6 +211,7 @@ export function FilmLibrary(){
           reject(err);
         } else if (row !== undefined) {
           sql = 'UPDATE films SET title = ?, isFavorite = ?, watchDate = DATE(?), rating = ? WHERE id = ?';
+          
           if(film.title === undefined)
             film.title = row.title;
           if(film.watchDate === undefined)
@@ -219,6 +220,7 @@ export function FilmLibrary(){
             film.isFavorite = row.isFavorite;
           if(film.rating === undefined)
             film.rating = row.rating;
+          
           db.run(sql, [film.title, film.isFavorite, film.watchDate, film.rating, film.id], (err) => {
             if (err){
               reject(err);
@@ -258,6 +260,33 @@ this.deleteFilm = (film) => {
       });
     });
   }
+
+   /*
+  b. Delete a movie from the database (using its ID as a reference). 
+     After completion, print a confirmation/failure message. 
+  */
+this.deleteFilmById = (id) => {
+  return new Promise((resolve, reject) => {
+    let sql = 'SELECT * FROM films WHERE id = ?';
+    db.get(sql, [id], (err, row) => {
+      if (err) {
+        reject(err);
+      } else if (row !== undefined) {
+        sql = 'DELETE FROM films WHERE id = ?';
+        db.run(sql, [id], (err) => {
+          if (err){
+            reject(err);
+          }else{
+            resolve("Film deleted.");
+          }
+        });
+      } else{
+        resolve("Film not present, check the used id.");
+      }
+    });
+  });
+}
+
   /*
   c. Delete the watch date of all films stored in the database. 
      After completion, print a confirmation/failure message. 
