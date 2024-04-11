@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--Bootstrap meta tag-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Other meta tags-->
+    <meta name="description" content="FilmLibrary">
+    <meta name="author" content="Francesco Bratta">
+
+    <!-- CSS: Bootstrap, Bootstrap Icon, custom -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <style>    
+        .btn-circle.btn-lg {
+            width: 50px;
+            height: 50px;
+            padding: 10px 16px;
+            font-size: 18px;
+            line-height: 1.33;
+            border-radius: 25px;
+        }
+    </style>
+
+    <title>FilmLibrary</title>
+  </head>
+
+  <body>
+    <!-- Navigation bar: logo, search box and user  icon -->
+    <header>
+        <nav class="navbar navbar-dark bg-primary">
+            <div class="container-fluid">
+                    <div class="col-3">
+                        <div class="d-flex flex-row">
+                            <div class="col-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
+                                    <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
+                                  </svg>
+                            </div>
+
+                            <div class="col-4">
+                                <a class="navbar-brand">Film Library</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-5 d-flex justify-content-start">
+                        <form class="d-flex" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        </form>
+                    </div>
+
+                    <div class="col-1 d-flex align-items-end">
+                        <button type="button" class="btn btn-default btn-circle btn-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                              </svg>
+                        </button>
+                    </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Create two columns:
+            -left one: sidebar 1/3 of total width
+                       it contains filters: "All" "Favorite" "Best rated" "Seen last month" "Unseen"
+            -right one: main content remaining 2/3 
+                        label with title
+                        list of films with the applied filters
+                            the list contains: title, checkbox for favorite, date in "Month D, Yr", rating using 5 stars
+                        element to add new films represented by "+" in the bottom right corner -->
+
+    <main class="container-fluid">
+        <div class="row">
+            <div class="col-4">
+                <div class="row">All</div>
+                <div class="row">Favorite</div>
+                <div class="row">Best rated</div>
+                <div class="row">Seen last month</div>
+                <div class="row">Unseen</div>
+            </div>
+
+            <div class="col-8">
+                <div class="row"><h3>All</h3></div>
+                <div class="row">
+                    <div class="col">title</div>
+                    <div class="col">favorite</div>
+                    <div class="col">date</div>
+                    <div class="col">rating</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <button type="button" class="btn btn-default btn-circle btn-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                  </svg>
+            </button>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
