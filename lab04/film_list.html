@@ -34,13 +34,13 @@
                     <div class="col-3">
                         <div class="d-flex flex-row">
                             <div class="col-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-film mt-0" viewBox="0 0 16 16">
                                     <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
                                   </svg>
                             </div>
 
                             <div class="col-4">
-                                <a class="navbar-brand">Film Library</a>
+                                <a class="navbar-brand m-1">Film Library</a>
                             </div>
                         </div>
                     </div>
@@ -73,33 +73,93 @@
 
     <main class="container-fluid">
         <div class="row">
-            <div class="col-4">
-                <div class="row">All</div>
-                <div class="row">Favorite</div>
-                <div class="row">Best rated</div>
-                <div class="row">Seen last month</div>
-                <div class="row">Unseen</div>
+            <div class="col-4 p-4">
+                <div class="row mb-3 bg-dark"><text class="bg-dark"></text></div>
+                <div class="row mb-3">Favorite</div>
+                <div class="row mb-3">Best rated</div>
+                <div class="row mb-3">Seen last month</div>
+                <div class="row mb-3">Unseen</div>
             </div>
 
             <div class="col-8">
                 <div class="row"><h3>All</h3></div>
-                <div class="row">
-                    <div class="col">title</div>
-                    <div class="col">favorite</div>
-                    <div class="col">date</div>
-                    <div class="col">rating</div>
+                <div class="row mb-3">
+                    <div class="col">Title</div>
+                    <div class="col">
+                        <input type="checkbox" id="isFavorite" name="isFavorite">
+                        <label for="isFavorite">Favorite</label>     
+                    </div>
+                    <div class="col">March 14, 2000</div>
+                    <div class="col">
+                        <label for="star5">★</label>
+                        <label for="star4">★</label>
+                        <label for="star3">★</label>
+                        <label for="star2">★</label>
+                        <label for="star1">☆</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">Title</div>
+                    <div class="col">
+                        <input type="checkbox" id="isFavorite" name="isFavorite">
+                        <label for="isFavorite">Favorite</label>     
+                    </div>
+                    <div class="col">March 14, 2000</div>
+                    <div class="col">
+                        <label for="star5">★</label>
+                        <label for="star4">★</label>
+                        <label for="star3">★</label>
+                        <label for="star2">★</label>
+                        <label for="star1">☆</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">Title</div>
+                    <div class="col">
+                        <input type="checkbox" id="isFavorite" name="isFavorite">
+                        <label for="isFavorite">Favorite</label>     
+                    </div>
+                    <div class="col">March 14, 2000</div>
+                    <div class="col">
+                        <label for="star5">★</label>
+                        <label for="star4">★</label>
+                        <label for="star3">★</label>
+                        <label for="star2">★</label>
+                        <label for="star1">☆</label>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">Title</div>
+                    <div class="col">
+                        <input type="checkbox" id="isFavorite" name="isFavorite">
+                        <label for="isFavorite">Favorite</label>     
+                    </div>
+                    <div class="col">March 14, 2000</div>
+                    <div class="col">
+                        <label for="star5">★</label>
+                        <label for="star4">★</label>
+                        <label for="star3">★</label>
+                        <label for="star2">★</label>
+                        <label for="star1">☆</label>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+    </main>
+
+    <footer class="container-fluid footer">
+        <div class="row justify-content-end">
             <button type="button" class="btn btn-default btn-circle btn-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-                  </svg>
+                </svg>
             </button>
         </div>
-    </main>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
