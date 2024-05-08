@@ -86,21 +86,21 @@ function createFilmLiElement(film){
 
     const divFav = document.createElement('div');
     divFav.classList.add('col-6', 'col-xl-3', 'text-end', 'text-xl-center');
-    const spanFav = document.createElement('span');
-    spanFav.classList.add('custom-control', 'custom-checkbox');
-    const inputFav = document.createElement('input');
-    inputFav.type = 'checkbox';
-    inputFav.checked = film.isFavourite;
-    inputFav.classList.add('custom-control-input');
-    inputFav.setAttribute('id', `film-${film.isFavourite}`)
-    const labelFav = document.createElement('label');
-    labelFav.classList.add('custom-control-label');
-    labelFav.htmlFor = `film-${film.isFavourite}`;
-    labelFav.innerText = 'Favorite';
-    spanFav.appendChild(inputFav);
-    spanFav.appendChild(labelFav);
-    divFav.appendChild(spanFav);
-    divRow.appendChild(divFav);
+        const spanFav = document.createElement('span');
+        spanFav.classList.add('custom-control', 'custom-checkbox');
+            const inputFav = document.createElement('input');
+            inputFav.type = 'checkbox';
+            inputFav.checked = film.isFavourite;
+            inputFav.classList.add('custom-control-input');
+            inputFav.setAttribute('id', `film-${film.isFavourite}`)
+            const labelFav = document.createElement('label');
+            labelFav.classList.add('custom-control-label');
+            labelFav.htmlFor = `film-${film.isFavourite}`;
+            labelFav.innerText = 'Favorite';
+            spanFav.appendChild(inputFav);
+            spanFav.appendChild(labelFav);
+            divFav.appendChild(spanFav);
+            divRow.appendChild(divFav);
 
     const divDate = document.createElement('div');
     divDate.classList.add('col-4', 'col-xl-3', 'text-xl-center');
@@ -109,22 +109,34 @@ function createFilmLiElement(film){
 
     const divRate = document.createElement('div');
     divRate.classList.add('actions-container', 'col-8', 'col-xl-3', 'text-end');
-    const divStars = document.createElement('div');
-    divStars.classList.add('actions-container', 'col-8', 'col-xl-3', 'text-end');
-    
-    for(let i = 0; i < film.rating; i++){
-        divStars.innerHTML = divStars.innerHTML + '<i class="bi bi-star-fill"></i> ';
-    }
-    for(let i = 0; i < 5-film.rating; i++){
-        divStars.innerHTML = divStars.innerHTML + '<i class="bi bi-star"></i> ';
-    }
+        const divStars = document.createElement('div');
+        divStars.classList.add('actions-container', 'col-8', 'col-xl-3', 'text-end');
+        
+        for(let i = 0; i < film.rating; i++){
+            divStars.innerHTML = divStars.innerHTML + '<i class="bi bi-star-fill"></i> ';
+        }
+        for(let i = 0; i < 5-film.rating; i++){
+            divStars.innerHTML = divStars.innerHTML + '<i class="bi bi-star"></i> ';
+        }
 
     const divActions = document.createElement('div');
-    divActions.classList.add('d-none', 'd-xl-flex', 'actions');
-    divActions.innerHTML = '<i class="bi bi-pencil"></i> <i class="bi bi-trash"></i>';
-    divRate.appendChild(divStars);
-    divRate.appendChild(divActions);
-    divRow.appendChild(divRate);
+        divActions.classList.add('d-none', 'd-xl-flex', 'actions');
+        const editButton = document.createElement('i');
+        editButton.classList.add('bi', 'bi-pencil');
+        //Add listener
+        divActions.appendChild(editButton);
+
+        const deleteButton = document.createElement('i');
+        deleteButton.classList.add('bi', 'bi-trash');
+        deleteButton.addEventListener('click', event => {
+            //delete
+        });
+
+        divActions.appendChild(deleteButton);
+
+        divRate.appendChild(divStars);
+        divRate.appendChild(divActions);
+        divRow.appendChild(divRate);
 
     return li;
 }
@@ -190,6 +202,16 @@ function addUnseenListener(films) {
 
 function addAllListener(films) {
     const filterFavorite = document.getElementById('filter-all');
+    filterFavorite.addEventListener('click', event => {
+        let filtered = [...films];
+
+        filterFavorite.setAttribute('aria-current', 'page');
+        createFilmList(filtered);
+    })
+}
+
+function deleteFilmListener(films) {
+    const filterFavorite = document.getElementById('delete-');
     filterFavorite.addEventListener('click', event => {
         let filtered = [...films];
 
