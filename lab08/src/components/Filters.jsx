@@ -1,4 +1,5 @@
-import {Button, Col, Container, Row, Nav} from "react-bootstrap/";
+import { Nav, NavItem, NavLink } from "react-bootstrap/";
+import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 
 function Filters(props) {
@@ -11,15 +12,14 @@ function Filters(props) {
         {
             filterArray.map(([filterName, {label}]) =>{
                 return(
-                    <Nav.Item key={filterName}>
-                        <Nav.Link href={"#" + filterName}
-                            onClick={() => onSelect(filterName)}
-                            className={selected == filterName ? '' : 'link-dark'}
-                            active={selected == filterName}
-                        >
-                            {label}
-                        </Nav.Link>
-                    </Nav.Item>
+                    <NavItem key={filterName}>
+                        <NavLink onClick={onSelect}
+                                active={selected == filterName}>
+                        <Link style={{textDecoration : 'none', width : '100%', justifyContent : 'start'}} 
+                              className={selected == filterName ? 'btn' : 'btn link-dark'}
+                              to={`/films/filter/${filterName.split('-')[1]}`}>{label}</Link>
+                        </NavLink>
+                    </NavItem>
                 )
             })
         }

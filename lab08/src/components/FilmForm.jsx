@@ -3,15 +3,33 @@ import { useState } from 'react';
 
 import PropTypes from 'prop-types';
 import {Col, Form, Row, Button} from "react-bootstrap";
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Film } from '../films.mjs';
 
-function FilmForm(props){
-    const {mode, cancel, addNewFilm, updateFilm, film} = props;
-    //per ora implemento solo adding, poi userò stesso form per edit
-    const [id, setId] = useState(film.id ? film.id : 0);
-    const [title, setTitle] = useState(film.title ? film.title : "");
+export function AddEditFilmLayout(props){
+    let film = new Film()
+    if(props.m === 'edit'){
+        const {id} = useParams();
+        film = props.films.find((f) =>{
+            if(f.id === Number(id)) {
+                return new Film(f.id, f.title, f.favorite, f.date, f.rating, 0);
+            }
+        })
+    }
+    props.handleMode(props.m)
+    
+    return(<>
+        <FilmForm mode = {props.m} handleMode={props.handleMode} addNewFilm={props.addNewFilm} updateFilm={props.updateFilm} film={film}/>
+    </>);
+}
+
+function FilmForm({mode, addNewFilm, updateFilm, film, handleMode}){
+    const navigate = useNavigate();
+    const [id, setId] = useState(film ? film.id : 0);
+    const [title, setTitle] = useState(film ? film.title : "");
     const [date, setDate] = useState(film.watchDate ? film.watchDate.format("YYYY-MM-DD") : dayjs().format("YYYY-MM-DD"));
-    const [favorite, setFavorite] = useState(film.favorite ? film.favorite : false);
-    const [rating, setRating] = useState(film.rating ? film.rating : 0);
+    const [favorite, setFavorite] = useState(film ? film.favorite : false);
+    const [rating, setRating] = useState(film ? film.rating : 0);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -24,6 +42,7 @@ function FilmForm(props){
         } else {
             addNewFilm(film);
         }
+        navigate(-1);
       }
 
     const Rating = ({maxStars, rating}) => {
@@ -36,6 +55,9 @@ function FilmForm(props){
     };
 
     return (
+        <>
+        {mode==='add' && <h1>Add film</h1>}
+        {mode==='edit' && <h1>Edit film</h1>}
         <Form className='bg-light rounded p-4' onSubmit={handleSubmit}>
             <Form.Group>
                 <Row>
@@ -77,12 +99,22 @@ function FilmForm(props){
                     </Col>
                 </Row>
             </Form.Group>
-
+            
             {mode==='add' && <Button variant='success' type='submit'>Add</Button>}
             {mode==='edit' && <Button variant='success' type='submit'>Update</Button>}{' '}
-            <Button variant='danger' onClick={cancel}>Cancel</Button>
+            <Link className='btn btn-danger' onClick={() => { handleMode('view'); navigate(-1);}}>Cancel</Link>
         </Form>
+        </>
     );
 }
+
+FilmForm.propTypes = {
+    modeForm : PropTypes.string, 
+    addNewFilm : PropTypes.func, 
+    updateFilm : PropTypes.func, 
+    film : PropTypes.object, 
+    setView : PropTypes.func
+}
+
 
 export default FilmForm;

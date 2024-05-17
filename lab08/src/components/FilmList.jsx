@@ -1,16 +1,27 @@
-import dayjs from 'dayjs';
 import {Col, Row} from 'react-bootstrap/';
 
 import PropTypes from 'prop-types';
 import {ListGroup, ListGroupItem} from "react-bootstrap";
+import { Link } from 'react-router-dom';
+
+export function FilmLayout(props){
+    const {films, handleUpdate, filter} = props;
+    props.handleMode('view');
+    return(<>
+        <FilmList films={films} handleUpdate={handleUpdate} filter={filter}></FilmList>
+    </>);
+}
 
 function FilmList(props){
-    const {films, handleUpdate} = props;
+    const {films, handleUpdate, filter} = props;
 
     return (
+        <>
+        <h1><span id="filter-title">{filter}</span> films</h1>
         <ListGroup id="film-list" variant="flush">
             {films.map((film) => <FilmElement film={film} handleUpdate={handleUpdate} key={film.id}></FilmElement>)}
         </ListGroup>
+        </>
     );
 }
 
@@ -43,8 +54,11 @@ function FilmElement({film, handleUpdate}){
                 </Col>
                 <Col xs={2} className='actions-container text-end'>
                     <div className="d-xl-flex actions">
-                            <i className="bi bi-pencil" onClick={() => handleUpdate(film)}></i>
-                            <i className="bi bi-trash"></i>
+                        <Link className="btn"
+                              to={`/films/${film.id}/edit`}>
+                                <i className="bi bi-pencil"/>
+                        </Link>
+                        <i className="bi bi-trash"></i>
                     </div> 
                 </Col>
             </Row>
