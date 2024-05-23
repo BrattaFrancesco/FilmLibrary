@@ -1,0 +1,11 @@
+Id: 1, Title: Pulp Fiction, Favorite: true, Watch date: March 10, 2024, Score: 5, User: 1 
+Id: 2, Title: 21 Grams, Favorite: true, Watch date: March 17, 2024, Score: 4, User: 1 
+Id: 3, Title: Star Wars, Favorite: false, Watch date: null, Score: 0, User: 1 
+Id: 4, Title: Matrix, Favorite: false, Watch date: null, Score: 0, User: 1 
+Id: 5, Title: Shrek, Favorite: false, Watch date: March 21, 2024, Score: 3, User: 1 
+
+1, "Pulp Fiction", true, March 10, 2024, 5, 1 
+2, "21 Grams", true, March 17, 2024, 4, 1 
+3, "Star Wars", false, null, 0, 1 
+4, "Matrix", false, null, 0, 1 
+5, "Shrek", false, March 21, 2024, 3, 1 
