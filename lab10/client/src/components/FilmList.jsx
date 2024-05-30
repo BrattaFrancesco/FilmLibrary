@@ -1,4 +1,4 @@
-import {Col, Row} from 'react-bootstrap/';
+import {Col, Row, Button} from 'react-bootstrap/';
 
 import { useEffect, useState } from 'react';
 
@@ -11,7 +11,7 @@ import API from '../API.mjs'
 
 export function FilmLayout(props){
     const [films, setFilms] = useState(null);
-    const { handleUpdate, filter} = props;
+    const {filter} = props;
 
     useEffect(() => {
         setFilms(null)
@@ -19,7 +19,7 @@ export function FilmLayout(props){
         switch(filter.id){
             case 'filter-all':
                 getFilms = async () => {
-                    const films = await API.getFilms();;
+                    const films = (await API.getFilms()).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
@@ -50,22 +50,33 @@ export function FilmLayout(props){
         }
         getFilms();
       }, [filter]);
-      
+
+    const handleDelete = (id) => {
+        setFilms(oldFilms => {
+            return oldFilms.map((f) => {
+                if(f.id === id) {
+                f.deleted = true;
+              }else{
+                return f;
+              }
+            });
+        });
+    }
     
     props.handleMode('view');
     return(<>
-        <FilmList films={films} handleUpdate={handleUpdate} filter={filter}/> 
+        <FilmList films={films} handleDelete={handleDelete} filter={filter}/> 
     </>);
 }
 
 function FilmList(props){
-    const {films, handleUpdate, filter} = props;
+    const {films, handleDelete, filter} = props;
 
     return (
         <>
         <h1><span id="filter-title">{filter.label}</span> films</h1>
         {films ? <ListGroup id="film-list" variant="flush">
-                        {films.map((film) => <FilmElement film={film} handleUpdate={handleUpdate} key={film.id}></FilmElement>)}
+                        {films.map((film) => <FilmElement film={film} handleDelete={handleDelete} key={film.id}></FilmElement>)}
                     </ListGroup>
                : <p className='lead'>Loading films...</p>}
         </>
@@ -77,10 +88,10 @@ FilmList.propTypes = {
 
 };
 
-function FilmElement({film, handleUpdate}){
+function FilmElement({film, handleDelete}){
     
     return (
-        <ListGroupItem>
+        <ListGroupItem active={film.disabled}>
             <Row className="gy-2">
                 <Col xs={2} className="d-flex gap-2 align-items-center">
                     {film.title}
@@ -101,11 +112,13 @@ function FilmElement({film, handleUpdate}){
                 </Col>
                 <Col xs={2} className='actions-container text-end'>
                     <div className="d-xl-flex actions">
-                        <Link className="btn"
+                        <Link className="btn bg-light"
                               to={`/films/${film.id}/edit`}>
                                 <i className="bi bi-pencil"/>
                         </Link>
-                        <i className="bi bi-trash"></i>
+                        <Button variant='light' onClick={() => handleDelete(film.id)}>
+                            <i className="bi bi-trash bg"/>  
+                        </Button>
                     </div> 
                 </Col>
             </Row>

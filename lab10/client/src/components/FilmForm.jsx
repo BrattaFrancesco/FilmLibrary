@@ -43,7 +43,9 @@ function FilmForm({mode, film, handleMode}){
         // TODO: aggiungere validazione
         
         if(mode === 'edit') {
-            //updateFilm(film);
+            API.updateFilm(film)
+               .then(() => navigate(-1))
+               .catch((err) => console.log(err))
         } else {
             API.addFilm(film)
                .then(() => navigate(-1))
