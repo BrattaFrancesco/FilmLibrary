@@ -12,6 +12,7 @@ import API from '../API.mjs'
 export function FilmLayout(props){
     const [films, setFilms] = useState(null);
     const {filter} = props;
+    const [filmDeletedController, setFilmDeletedController] = useState(true)
 
     useEffect(() => {
         setFilms(null)
@@ -25,42 +26,46 @@ export function FilmLayout(props){
                 break;
             case 'filter-favorite':
                 getFilms = async () => {
-                    const films = await API.getFavoriteFilms();
+                    const films = (await API.getFavoriteFilms()).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
             case 'filter-best':
                 getFilms = async () => {
-                    const films = await API.getBestFilms();
+                    const films = (await API.getBestFilms()).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
             case 'filter-lastmonth':
                 getFilms = async () => {
-                    const films = await API.getLastMonthFilms();
+                    const films = (await API.getLastMonthFilms()).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
             case 'filter-unseen':
                 getFilms = async () => {
-                    const films = await API.getUnseenFilms();
+                    const films = (await API.getUnseenFilms()).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
         }
         getFilms();
-      }, [filter]);
+      }, [filter, filmDeletedController]);
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         setFilms(oldFilms => {
             return oldFilms.map((f) => {
                 if(f.id === id) {
-                f.deleted = true;
-              }else{
+                    f.deleted = true;
+                }
                 return f;
-              }
             });
         });
+        await API.deleteFilm(id)
+           .then(() => {
+                setFilmDeletedController(oldValue => !oldValue)
+            })
+           .catch((err) => console.log(err))
     }
     
     props.handleMode('view');
@@ -91,7 +96,7 @@ FilmList.propTypes = {
 function FilmElement({film, handleDelete}){
     
     return (
-        <ListGroupItem active={film.disabled}>
+        <ListGroupItem active={film.deleted}>
             <Row className="gy-2">
                 <Col xs={2} className="d-flex gap-2 align-items-center">
                     {film.title}

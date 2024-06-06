@@ -32,26 +32,6 @@ function App() {
     setMode(mode);
   }
 
-  /* const addNewFilm = (film) => {
-    setFilms(oldFilms => {
-      const newId = Math.max(...oldFilms.map(film => film.id)) + 1;
-      const newFilm = new Film(newId, film.title, film.favorite, film.date, film.rating, 0);
-      return [...oldFilms, newFilm];
-    });
-  }
-
-  const updateFilm = (film) => {
-    setFilms(oldFilms => {
-      return oldFilms.map((f) => {
-        if(f.id === film.id) {
-          return new Film(film.id, film.title, film.favorite, film.date, film.rating, 0);
-        }else{
-          return f;
-        }
-      });
-    });
-  } */
-
   /**
    * AddNewFilm : /films/new
    * EditFilm : /films/filmId/edit

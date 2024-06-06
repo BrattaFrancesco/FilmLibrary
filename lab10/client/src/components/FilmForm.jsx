@@ -23,8 +23,9 @@ export function AddEditFilmLayout(props){
         
     props.handleMode(props.m);
     return(<>
-        {film ? <FilmForm mode = {props.m} handleMode={props.handleMode} film={film}/>
-              : <p className='lead'>Loading film...</p>}
+        {props.m === 'add' ? <FilmForm mode = {props.m} handleMode={props.handleMode} film={film} />
+                        : film ? <FilmForm mode = {props.m} handleMode={props.handleMode} film={film} />
+                               : <p className='lead'>Loading film...</p> }
     </>);
 }
 
@@ -32,7 +33,7 @@ function FilmForm({mode, film, handleMode}){
     const navigate = useNavigate();
     const [id, setId] = useState(film ? film.id : 0);
     const [title, setTitle] = useState(film ? film.title : "");
-    const [watchDate, setWatchDate] = useState(film.watchDate ? film.watchDate.format("YYYY-MM-DD") : null);
+    const [watchDate, setWatchDate] = useState(film?.watchDate ? film.watchDate.format("YYYY-MM-DD") : null);
     const [favorite, setFavorite] = useState(film ? film.favorite : false);
     const [rating, setRating] = useState(film ? film.rating : 0);
 
