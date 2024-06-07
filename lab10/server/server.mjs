@@ -3,7 +3,12 @@ import express, { response } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import {check, validationResult} from 'express-validator';
-import { FilmLibrary } from './dao.mjs';
+import { FilmLibrary } from './film-dao.mjs';
+
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+import session from 'express-session';
+import { getUser, getUserById } from './user-dao.mjs';
 
 // init
 const app = express();
@@ -16,17 +21,46 @@ app.use(morgan('dev'));
 // set up and enable CORS
 const corsOptions = {
     origin: 'http://localhost:5173',
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    credentials: true
   };
-  app.use(cors(corsOptions));
+app.use(cors(corsOptions));
   
+passport.use(new LocalStrategy(async function verify(username, password, cb) {
+    const user = await getUser(username, password);
+    if(!user)
+        return cb(null, false, 'Incorrect username or password.');
+    return cb(null, user);
+}));
+
+passport.serializeUser(function (user, cb) {
+    cb(null, user);
+});
+
+passport.deserializeUser(function (user, cb) {
+    return cb(null, user);
+});
+
+const isLoggedIn = (req, res, next) => {
+    if(req.isAuthenticated()) {
+        return next();
+    }
+    return res.status(401).json({error: 'Not authorized'});
+}
+
+app.use(session({
+    secret: "ahboh",
+    resave: false,
+    saveUninitialized: false,
+}));
+app.use(passport.authenticate('session'));
 
 // ROUTES
 
 // GET /api/films
-app.get('/api/films', async (request, response) => {
+app.get('/api/films', isLoggedIn, async (request, response) => {
     try {
-        const films = await filmLibrary.getFilms();
+        const films = await filmLibrary.getFilms(request.query.userId);
         if(films.error)
             response.status(404).json(films);
         else
@@ -37,9 +71,9 @@ app.get('/api/films', async (request, response) => {
 });
 
 // GET /api/films/favorite
-app.get('/api/films/favorite', async(req, res) => {
+app.get('/api/films/favorite', isLoggedIn, async(req, res) => {
     try {
-        const films = await filmLibrary.getFavoriteFilms();
+        const films = await filmLibrary.getFavoriteFilms(req.query.userId);
         if(films.error)
             res.status(404).json(films);
         else
@@ -50,9 +84,9 @@ app.get('/api/films/favorite', async(req, res) => {
 });
 
 // GET /api/films/best
-app.get('/api/films/best', async(req, res) => {
+app.get('/api/films/best', isLoggedIn, async(req, res) => {
     try {
-        const films = await filmLibrary.getFilmsWithHigherRateThan(4);
+        const films = await filmLibrary.getFilmsWithHigherRateThan(4, req.query.userId);
         if(films.error)
             res.status(404).json(films);
         else
@@ -63,9 +97,9 @@ app.get('/api/films/best', async(req, res) => {
 });
 
 // GET /api/films/last-month
-app.get('/api/films/last-month', async(req, res) => {
+app.get('/api/films/last-month', isLoggedIn, async(req, res) => {
     try {
-        const films = await filmLibrary.getFilmsWatchedLastMonth();
+        const films = await filmLibrary.getFilmsWatchedLastMonth(req.query.userId);
         if(films.error)
             res.status(404).json(films);
         else
@@ -76,9 +110,9 @@ app.get('/api/films/last-month', async(req, res) => {
 });
 
 // GET /api/films/unseen
-app.get('/api/films/unseen', async(req, res) => {
+app.get('/api/films/unseen', isLoggedIn, async(req, res) => {
     try {
-        const films = await filmLibrary.getUnseenFilms();
+        const films = await filmLibrary.getUnseenFilms(req.query.userId);
         if(films.error)
             res.status(404).json(films);
         else
@@ -89,7 +123,7 @@ app.get('/api/films/unseen', async(req, res) => {
 });
 
 // GET /api/films/<id>
-app.get('/api/films/:id', async(req, res) => {
+app.get('/api/films/:id', isLoggedIn, async(req, res) => {
     try {
         const films = await filmLibrary.getFilmById(req.params.id);
         if(films.error)
@@ -102,7 +136,7 @@ app.get('/api/films/:id', async(req, res) => {
 });
 
 // POST /api/films
-app.post('/api/films', [
+app.post('/api/films', isLoggedIn, [
     check('title').notEmpty(),
     check('isFavorite').isBoolean(),
     check('watchedDate').isDate({format: "YYYY-MM-DD", strictMode: true}).optional({nullable: true}),
@@ -110,7 +144,6 @@ app.post('/api/films', [
     check('userId').isNumeric()
 ], async (req, res) =>{
     const errors = validationResult(req);
-    console.log(req.body)
     if(!errors.isEmpty()){
         return res.status(422).json({errors: errors.array()});
     }
@@ -127,9 +160,10 @@ app.post('/api/films', [
 });
 
 // PUT /api/films/4
-app.put('/api/films/:id', [
+app.put('/api/films/:id', isLoggedIn, [
     check('title').isString().optional({nullable: true}),
     check('watchedDate').isDate({format: "YYYY-MM-DD", strictMode: true}).optional({nullable: true}),
+    check('userId').isNumeric().notEmpty()
 ], async (req, res) =>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
@@ -150,8 +184,9 @@ app.put('/api/films/:id', [
 });
 
 // PUT /api/films/4/rating
-app.put('/api/films/:id/rating', [
-    check('rating').isNumeric()
+app.put('/api/films/:id/rating', isLoggedIn, [
+    check('rating').isNumeric(),
+    check('userId').isNumeric().notEmpty()
 ], async (req, res) =>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
@@ -171,8 +206,9 @@ app.put('/api/films/:id/rating', [
 });
 
 // PUT /api/films/4/favorite
-app.put('/api/films/:id/favorite', [
-    check('isFavorite').isBoolean()
+app.put('/api/films/:id/favorite', isLoggedIn, [
+    check('isFavorite').isBoolean(),
+    check('userId').isNumeric().notEmpty()
 ], async (req, res) =>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
@@ -194,7 +230,7 @@ app.put('/api/films/:id/favorite', [
 // DELETE /api/films/:id
 app.delete('/api/films/:id', async (req, res) => {
     try {
-        const films = await filmLibrary.deleteFilmById(req.params.id);
+        const films = await filmLibrary.deleteFilmById(req.params.id, req.query.userId);
         if(films.error)
             res.status(404).json(films);
         else
@@ -202,6 +238,38 @@ app.delete('/api/films/:id', async (req, res) => {
     } catch {
         res.status(500).end();
     }
+});
+
+// POST /api/session
+app.post('/api/session', function(req, res, next) {
+    passport.authenticate('local', (err, user, info) => {
+        if(err)
+            return next(err);
+        if (!user) {
+            return res.status(401).send(info);
+        }
+        req.login(user, (err) => {
+            if(err)
+                return next(err);
+            return res.status(201).json(req.user)
+        });
+    })(req, res, next);
+});
+
+// GET /api/session/current
+app.get('/api/session/current', (req, res) => {
+    if(req.isAuthenticated()){
+        res.json(req.user);
+    }else{
+        res.status(401).json({error: 'Not authenticated'});
+    }
+});
+
+// DELETE /api/session/current
+app.delete('/api/session/current', (req, res) => {
+    req.logout(() => {
+        res.end();
+    });
 });
 
 // start server

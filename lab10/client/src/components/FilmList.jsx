@@ -11,7 +11,7 @@ import API from '../API.mjs'
 
 export function FilmLayout(props){
     const [films, setFilms] = useState(null);
-    const {filter} = props;
+    const {filter, userId} = props;
     const [filmDeletedController, setFilmDeletedController] = useState(true)
 
     useEffect(() => {
@@ -20,31 +20,31 @@ export function FilmLayout(props){
         switch(filter.id){
             case 'filter-all':
                 getFilms = async () => {
-                    const films = (await API.getFilms()).map(film => ({ ...film, deleted: false }));
+                    const films = (await API.getFilms(userId)).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
             case 'filter-favorite':
                 getFilms = async () => {
-                    const films = (await API.getFavoriteFilms()).map(film => ({ ...film, deleted: false }));
+                    const films = (await API.getFavoriteFilms(userId)).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
             case 'filter-best':
                 getFilms = async () => {
-                    const films = (await API.getBestFilms()).map(film => ({ ...film, deleted: false }));
+                    const films = (await API.getBestFilms(userId)).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
             case 'filter-lastmonth':
                 getFilms = async () => {
-                    const films = (await API.getLastMonthFilms()).map(film => ({ ...film, deleted: false }));
+                    const films = (await API.getLastMonthFilms(userId)).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
             case 'filter-unseen':
                 getFilms = async () => {
-                    const films = (await API.getUnseenFilms()).map(film => ({ ...film, deleted: false }));
+                    const films = (await API.getUnseenFilms(userId)).map(film => ({ ...film, deleted: false }));
                     setFilms(films);
                 }
                 break;
@@ -52,7 +52,7 @@ export function FilmLayout(props){
         getFilms();
       }, [filter, filmDeletedController]);
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id, userId) => {
         setFilms(oldFilms => {
             return oldFilms.map((f) => {
                 if(f.id === id) {
@@ -61,7 +61,7 @@ export function FilmLayout(props){
                 return f;
             });
         });
-        await API.deleteFilm(id)
+        await API.deleteFilm(id, userId)
            .then(() => {
                 setFilmDeletedController(oldValue => !oldValue)
             })
@@ -70,20 +70,18 @@ export function FilmLayout(props){
     
     props.handleMode('view');
     return(<>
-        <FilmList films={films} handleDelete={handleDelete} filter={filter}/> 
+        <FilmList films={films} handleDelete={handleDelete} filter={filter} userId={userId}/> 
     </>);
 }
 
 function FilmList(props){
-    const {films, handleDelete, filter} = props;
-
+    const {films, handleDelete, filter, userId} = props;
     return (
         <>
         <h1><span id="filter-title">{filter.label}</span> films</h1>
-        {films ? <ListGroup id="film-list" variant="flush">
-                        {films.map((film) => <FilmElement film={film} handleDelete={handleDelete} key={film.id}></FilmElement>)}
-                    </ListGroup>
-               : <p className='lead'>Loading films...</p>}
+        {!films ? (<p className='lead'>Loading films...</p>)
+                : (<ListGroup id="film-list" variant="flush">
+                    {films.map((film) => <FilmElement film={film} handleDelete={handleDelete} key={film.id} userId={userId}></FilmElement>)}</ListGroup>) }
         </>
     );
 }
@@ -93,7 +91,7 @@ FilmList.propTypes = {
 
 };
 
-function FilmElement({film, handleDelete}){
+function FilmElement({film, handleDelete, userId}){
     
     return (
         <ListGroupItem active={film.deleted}>
@@ -121,7 +119,7 @@ function FilmElement({film, handleDelete}){
                               to={`/films/${film.id}/edit`}>
                                 <i className="bi bi-pencil"/>
                         </Link>
-                        <Button variant='light' onClick={() => handleDelete(film.id)}>
+                        <Button variant='light' onClick={() => handleDelete(film.id, userId)}>
                             <i className="bi bi-trash bg"/>  
                         </Button>
                     </div> 

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 
 import PropTypes from 'prop-types';
 import {Col, Form, Row, Button} from "react-bootstrap";
@@ -22,14 +22,15 @@ export function AddEditFilmLayout(props){
     }
         
     props.handleMode(props.m);
+    
     return(<>
-        {props.m === 'add' ? <FilmForm mode = {props.m} handleMode={props.handleMode} film={film} />
-                        : film ? <FilmForm mode = {props.m} handleMode={props.handleMode} film={film} />
+        {props.m === 'add' ? <FilmForm mode = {props.m} handleMode={props.handleMode} film={film} userId={props.userId}/>
+                        : film ? <FilmForm mode = {props.m} handleMode={props.handleMode} film={film} userId={film.userId} />
                                : <p className='lead'>Loading film...</p> }
     </>);
 }
 
-function FilmForm({mode, film, handleMode}){
+function FilmForm({mode, film, handleMode, userId}){
     const navigate = useNavigate();
     const [id, setId] = useState(film ? film.id : 0);
     const [title, setTitle] = useState(film ? film.title : "");
@@ -39,7 +40,7 @@ function FilmForm({mode, film, handleMode}){
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const film = {id, title, favorite, rating, watchDate, userId:1};
+        const film = {id, title, favorite, rating, watchDate, userId};
     
         // TODO: aggiungere validazione
         
